@@ -1,0 +1,3 @@
+[submodule "hlx"]
+	path = hlx
+	url = https://github.com/rAzoR8/hlx.git
