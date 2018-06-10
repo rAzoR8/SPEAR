@@ -4,6 +4,34 @@
 
 SPEAR is a integrated domain specific language translating C++17 to SPIR-V at host runtime.
 
+```cpp
+template <bool Assemble = true>
+class Mandelbrot : public FragmentProgram<Assemble>
+{
+public:
+	Mandelbrot() : FragmentProgram<Assemble>("Mandelbrot"){};
+	~Mandelbrot() {};
+
+	RenderTarget OutputColor;
+	inline void operator()()
+	{
+		f32 i = 0.f, max = 100.f;
+		complex c(Lerp(-1.f, 1.f, kFragCoord.x / 1600.f), kFragCoord.y / 900.f);
+		complex z(0.f, 0.f);
+		While(z.Conjugate() < 4.f && i < max)
+		{
+			z = z * z + c;
+			++i;
+		});
+		f32 scale = i / max;
+		OutputColor = float4(scale, scale, scale, 0.f);
+	};
+};
+```
+
+SPIR-V shader generated from SPEAR code above, rendered with Vulkan:
+![Mandelbrot rendered from SPEAR shader](misc/fractal.png)
+
 ## Benefits
 
 * Modern C++ features like templating & auto type deduction, Polymorphism
@@ -14,6 +42,8 @@ SPEAR is a integrated domain specific language translating C++17 to SPIR-V at ho
 * Interchangeable Shading Libraries (Hot-swapping shader DLLs during rendering)
 * Write meta programs / code generators
 * Vulkan interoperability: create PSOs from SPIRVModules
+
+![Debugging with Visual Studio](misc/vs_shader_dbg.png)
 
 ## Restrictions
 
@@ -29,11 +59,7 @@ Please don't use this for production, the codebase is largely untested and not g
 * Missing keywords switch, continue and break
 * Ternary conditional operator? can not be overloaded in C++ (Use Select function instead!)
 
-Please read to accompanying paper 'Development of a C++/SPIR-V Shader-Runtime' and presentation slides from the Khronos Meetup for more information.
-
-## Contributing
-
-The SPEAR project is maintained by Fabian Wahlster and hosted at https://github.com/razor8/SPEAR.
+Please read to accompanying paper [Development of a C++/SPIR-V Shader-Runtime](misc/Paper.pdf) and presentation [slides](misc/Slides.pdf) from the Khronos Meetup for more information.
 
 ## Build
 
@@ -53,7 +79,7 @@ No build files provided at the moment, please consider contributing. A C++17 com
 
 ## Usage
 
-Please look at example shaders located at SPIRVShaderFactory folder.
+Please look for the example shaders located at SPIRVShaderFactory folder.
 
 ## License
 ```
@@ -67,3 +93,10 @@ Naming the author(s) of this software in any of the following locations: About p
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
+
+## Contributing
+
+The SPEAR project is maintained by Fabian Wahlster and hosted at https://github.com/razor8/SPEAR.
+
+Special thanks go to:
+* Mathias Kanzler
