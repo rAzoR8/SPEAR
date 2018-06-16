@@ -104,28 +104,29 @@ set_target_properties(libSPEARGen PROPERTIES SOVERSION ${PROJECT_VERSION})
 set_target_properties(libSPEARGen PROPERTIES FRAMEWORK ON)
 target_link_libraries(libSPEARGen ${Vulkan_LIBRARY})
 
-# Below we define the headers that will be exported to the platform dependent library path (e.g. /usr/include).
-set_target_properties(libSPEARGen PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVBinaryDefines.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVBranchOperations.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVComplex.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVConstant.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVDecoration.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVExtensionAMD.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInlineAssembler.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInstruction.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInterop.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVModule.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVOperation.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVOperatorImpl.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVProgram.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVQuaternion.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVType.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariable.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariableTypeDefs.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariableTypes.h
-                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVectorComponentAccess.h")
+set(SPEAR_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVBinaryDefines.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVBranchOperations.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVComplex.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVConstant.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVDecoration.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVExtensionAMD.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInlineAssembler.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInstruction.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInterop.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVModule.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVOperation.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVOperatorImpl.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVProgram.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVQuaternion.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVType.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariable.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariableTypeDefs.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariableTypes.h
+                   ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVectorComponentAccess.h)
 
+# Below we define the headers that will be exported to the platform dep. path.
+set_target_properties(libSPEARGen PROPERTIES PUBLIC_HEADER "${SPEAR_INCLUDES}")
 # When installing, copy over the shared library and the header files.
 install(TARGETS libSPEARGen LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                             PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
@@ -135,32 +136,33 @@ if (SPEAR_BUILD_SHADER_FACTORY)
     add_library(libSPEARShaderFactory SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
     target_include_directories(libSPEARShaderFactory PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory
                                                      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/hlx/include
+                                                             ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
                                                              ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
     target_link_libraries(libSPEARShaderFactory libSPEARGen ${Boost_LIBRARIES} ${Vulkan_LIBRARY})
     set_target_properties(libSPEARShaderFactory PROPERTIES FRAMEWORK ON VERSION ${PROJECT_VERSION})
     set_target_properties(libSPEARShaderFactory PROPERTIES SOVERSION ${PROJECT_VERSION})
 
-    # Do the same as libSPEARGen. Currently we are exporting all headers in ShaderFactory, which may or may not be desired. Maybe change?
-    set_target_properties(libSPEARShaderFactory PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CameraFunctions.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/ClearColor.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CommonBufferSourceNames.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CSGExampleShader.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CSGObject.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderIdentifiers.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/IShaderFactory.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/LightingFunctions.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/Mandelbrot.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/MaterialInterface.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/MathFunctions.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/MicrofacetReflection.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/PhongMaterial.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/ScreenSpaceTriangle.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/SDFObject.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/ShaderID.h
-                                                                          ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/SimpleCSGRayMarching.h")
+    set(SPEAR_SHADER_FACTORY_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CameraFunctions.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/ClearColor.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CommonBufferSourceNames.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CSGExampleShader.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/CSGObject.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderIdentifiers.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/IShaderFactory.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/LightingFunctions.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/Mandelbrot.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/MaterialInterface.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/MathFunctions.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/MicrofacetReflection.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/PhongMaterial.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/ScreenSpaceTriangle.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/SDFObject.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/ShaderID.h
+                                      ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/SimpleCSGRayMarching.h)
 
-    # IDK if the ShaderFactory is something that should be installed in the $PATH.
+    set_target_properties(libSPEARShaderFactory PROPERTIES PUBLIC_HEADER "${SPEAR_SHADER_FACTORY_INCLUDES}")
+    # IDK if the ShaderFactory is something that should be installed in the $PATH, but let's do that now.
     install(TARGETS libSPEARShaderFactory LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                           PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
@@ -169,7 +171,7 @@ if (SPEAR_BUILD_TESTBED)
     add_executable(SPEARGenTest ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGenTest/main.cpp)
     target_include_directories(SPEARGenTest PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGenTest
                                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/hlx/include
-                                                    ${CMAKE_CURRENT_SOURCE_DIRS}/SPIRVGen
+                                                    ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
                                                     ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
     target_link_libraries(SPEARGenTest libSPEARGen ${Vulkan_LIBRARY})
     # Install the testbed as well. This is just for CMakeLists completeness.
