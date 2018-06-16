@@ -70,8 +70,9 @@ No build files provided at the moment, please consider contributing. A C++17 com
 * `SPIRVGen`: Core Spear library
 * `SPIRVGenTest`: Simple testbed project
 * `SPIRVShaderFactory`: Dynamic shader library example project
-* `spirvtools`: Target output folder for spirv-tool cmake
-* `boost`: for boost.DLL
+* `spirv-tools`: Target output folder for spirv-tool cmake
+* `spirv-headers`: SPIRV headers to be used when building
+* `boost`: Used for including the boost.DLL library
 
 `SPIRVGen` library project requires Vulkan-SDK files and HLX (submodule) headers.
 `SPIRVGenTest` executable project should link `SPIRVGen`.

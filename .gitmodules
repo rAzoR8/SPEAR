@@ -1,3 +1,9 @@
 [submodule "hlx"]
 	path = hlx
 	url = https://github.com/rAzoR8/hlx.git
+[submodule "spirv-tools"]
+	path = spirv-tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools.git
+[submodule "spirv-headers"]
+	path = spirv-headers
+	url = https://github.com/KhronosGroup/SPIRV-Headers
