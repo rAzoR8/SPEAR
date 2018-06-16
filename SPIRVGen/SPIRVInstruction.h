@@ -7,7 +7,7 @@
 #ifndef SPEAR_SPIRVINSTRUCTION_H
 #define SPEAR_SPIRVINSTRUCTION_H
 
-#include <vulkan\spirv.hpp>
+#include <spirv/1.2/spirv.hpp>
 #include <vector>
 
 namespace Spear

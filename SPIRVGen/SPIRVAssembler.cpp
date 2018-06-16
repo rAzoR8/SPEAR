@@ -9,7 +9,7 @@
 #include "SPIRVProgram.h"
 #include "SPIRVVariable.h"
 #include "SPIRVBinaryDefines.h"
-#include "spirv-tools\optimizer.hpp"
+#include <spirv-tools/optimizer.hpp>
 
 using namespace Spear;
 
