@@ -12,13 +12,19 @@
 
 void GenerateSwizzleHeader()
 {
-	std::string ups[4] = { "X", "Y", "Z", "W" };
-	char lows[2][4] = { { 'x', 'y', 'z', 'w' },{ 'r', 'g', 'b', 'a' } };
+	const std::string ups[4] = { "X", "Y", "Z", "W" };
+	const char lows[2][4] = { { 'x', 'y', 'z', 'w' },{ 'r', 'g', 'b', 'a' } };
 
 	std::ofstream out("SPIRVVectorComponentAccess.h");
 
 	if (out.is_open())
 	{
+        out << "//Copyright(c) 2018" << std::endl;
+        out << "//Authors: Fabian Wahlster" << std::endl;
+        out << "//Website: https://twitter.com/singul4rity" << std::endl;
+        out << "//Contact: f.wahlster@tum.de" << std::endl;
+        out << "//License: MIT with attribution (see LICENSE.txt)" << std::endl;
+
 		out << "#ifndef SPEAR_SPIRVVECTORCOMPONENTACCESS_H" << std::endl;
 		out << "#define SPEAR_SPIRVVECTORCOMPONENTACCESS_H" << std::endl;
 
@@ -41,7 +47,7 @@ void GenerateSwizzleHeader()
 
 			// setter const
 			out << "void "
-				<< sFuncName << "(const " + sInsertConst + "& _var) const { " + sInsert + "(var_t<"+ sInsertConst +", Assemble, spv::StorageClassFunction>(_var));}" << std::endl;
+				<< sFuncName << "(const " + sInsertConst + "& _var) const { " + sInsert + "(make_const<Assemble>(_var));}" << std::endl;
 		};
 
 		for (uint32_t x = 0; x < 4; ++x)
@@ -57,11 +63,13 @@ void GenerateSwizzleHeader()
 			GetSet();
 	
 			// property
+            out << "#ifdef SPEAR_ENABLE_PROPERTIES" << std::endl;
 			for (uint32_t l = 0; l < 2; ++l)
 			{
 				out << "__declspec(property(get = " << sFuncName << ", put = " << sFuncName <<
 					")) " << sExtractType << " " << lows[l][x] << ";" << std::endl;
 			}
+            out << "#endif // !SPEAR_ENABLE_PROPERTIES" << std::endl;
 
 			for (uint32_t y = 0; y < 4; ++y)
 			{
@@ -76,12 +84,14 @@ void GenerateSwizzleHeader()
 				GetSet();
 
 				// property
+                out << "#ifdef SPEAR_ENABLE_PROPERTIES" << std::endl;
 				for (uint32_t l = 0; l < 2; ++l)
 				{
 					out << "__declspec(property(get = " << sFuncName << ", put = " << sFuncName <<
 						")) " << sExtractType << " " << lows[l][x] << lows[l][y] << ";" << std::endl;
 				}
-
+                out << "#endif // !SPEAR_ENABLE_PROPERTIES" << std::endl;
+                
 				for (uint32_t z = 0; z < 4; ++z)
 				{
 					sTplArgs = "3, " + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z);
@@ -95,12 +105,14 @@ void GenerateSwizzleHeader()
 					GetSet();
 
 					// property
+                    out << "#ifdef SPEAR_ENABLE_PROPERTIES" << std::endl;
 					for (uint32_t l = 0; l < 2; ++l)
 					{
 						out << "__declspec(property(get = " << sFuncName << ", put = " << sFuncName <<
 							")) " << sExtractType << " " << lows[l][x] << lows[l][y] << lows[l][z] << ";" << std::endl;
 					}
-
+                    out << "#endif // !SPEAR_ENABLE_PROPERTIES" << std::endl;
+                    
 					for (uint32_t w = 0; w < 4; ++w)
 					{
 						sTplArgs = "3, " + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ", " + std::to_string(w);
@@ -114,11 +126,13 @@ void GenerateSwizzleHeader()
 						GetSet();
 
 						// property
+                        out << "#ifdef SPEAR_ENABLE_PROPERTIES" << std::endl;
 						for (uint32_t l = 0; l < 2; ++l)
 						{
 							out << "__declspec(property(get = " << sFuncName << ", put = " << sFuncName <<
 								")) " << sExtractType << " " << lows[l][x] << lows[l][y] << lows[l][z] << lows[l][w] << ";" << std::endl;
 						}
+                        out << "#endif // !SPEAR_ENABLE_PROPERTIES" << std::endl;
 					}
 				}
 			}
