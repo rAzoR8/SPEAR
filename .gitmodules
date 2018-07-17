@@ -1,16 +1,12 @@
-[submodule "hlx"]
-    shallow=true
+[submodule "libs/hlx"]
 	path = libs/hlx
-	url = https://github.com/rAzoR8/hlx.git
-[submodule "spirv-tools"]
-    shallow=true
-	path = libs/spirv-tools
-	url = https://github.com/KhronosGroup/SPIRV-Tools.git
-[submodule "spirv-headers"]
-    shallow=true
-	path = libs/spirv-headers
+	url = https://github.com/rAzoR8/hlx
+[submodule "libs/SPIRV-Headers"]
+	path = libs/SPIRV-Headers
 	url = https://github.com/KhronosGroup/SPIRV-Headers
+[submodule "libs/SPIRV-Tools"]
+	path = libs/SPIRV-Tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools
 [submodule "libs/glm"]
-    shallow=true
 	path = libs/glm
-	url = https://github.com/g-truc/glm
+	url = https://github.com/g-truc/glm.git

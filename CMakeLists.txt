@@ -85,8 +85,8 @@ endif()
 
 set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools   EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/SPIRV-Headers EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/SPIRV-Tools   EXCLUDE_FROM_ALL)
 
 # Hide away any options that were imported together by using add_subdirectory above.
 mark_as_advanced(FORCE SKIP_SPIRV_TOOLS_INSTALL RE2_BUILD_TESTING SPIRV_BUILD_COMPRESSION
@@ -104,6 +104,7 @@ add_library(libSPEARGen SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembl
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariable.cpp)
 target_include_directories(libSPEARGen PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
                                        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/hlx/include
+                                               ${CMAKE_CURRENT_SOURCE_DIR}/libs/glm/glm
                                                ${Vulkan_INCLUDE_DIRS}
                                                ${SPIRV-Headers_SOURCE_DIR}/include
                                                ${spirv-tools_SOURCE_DIR}/include)
@@ -157,6 +158,7 @@ if(SPEAR_BUILD_SHADER_FACTORY)
     add_library(libSPEARShaderFactory SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
     target_include_directories(libSPEARShaderFactory PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory
                                                      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/hlx/include
+                                                             ${CMAKE_CURRENT_SOURCE_DIR}/libs/glm/glm
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
                                                              ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
     target_link_libraries(libSPEARShaderFactory libSPEARGen ${Boost_LIBRARIES} ${Vulkan_LIBRARY})
@@ -199,6 +201,7 @@ if(SPEAR_BUILD_TESTBED)
     target_include_directories(SPEARGenTest PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGenTest
                                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/hlx/include
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
+                                                    ${CMAKE_CURRENT_SOURCE_DIR}/libs/glm/glm
                                                     ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
     target_link_libraries(SPEARGenTest libSPEARGen ${Vulkan_LIBRARY})
     # Install the testbed as well. This is just for CMakeLists completeness.
