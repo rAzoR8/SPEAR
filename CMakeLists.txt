@@ -48,7 +48,7 @@
 cmake_minimum_required(VERSION 3.8)
 
 project(SPEAR VERSION 1.0 LANGUAGES CXX DESCRIPTION "C++/SPIR-V Shader Runtime")
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 include(GNUInstallDirs)
 
@@ -85,8 +85,10 @@ endif()
 
 set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/SPIRV-Headers EXCLUDE_FROM_ALL)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/SPIRV-Tools   EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL)
+
+set(spirv-tools_LIBRARY SPIRV-Tools SPIRV-Tools-opt) # Some assumption are being made OK?
 
 # Hide away any options that were imported together by using add_subdirectory above.
 mark_as_advanced(FORCE SKIP_SPIRV_TOOLS_INSTALL RE2_BUILD_TESTING SPIRV_BUILD_COMPRESSION
@@ -111,7 +113,7 @@ target_include_directories(libSPEARGen PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRV
 set_target_properties(libSPEARGen PROPERTIES VERSION   ${PROJECT_VERSION})
 set_target_properties(libSPEARGen PROPERTIES SOVERSION ${PROJECT_VERSION})
 set_target_properties(libSPEARGen PROPERTIES FRAMEWORK ON)
-target_link_libraries(libSPEARGen ${Vulkan_LIBRARY})
+target_link_libraries(libSPEARGen ${Vulkan_LIBRARY} ${spirv-tools_LIBRARY})
 
 set(SPEAR_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.h
                    ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVBinaryDefines.h
@@ -151,6 +153,7 @@ if(SPEAR_BUILD_SHADER_FACTORY)
     if(NOT Boost_FOUND) # Assume directory is in libs/boost.
         message("Using custom Boost library at libs/boost!")
         set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
+        set(Boost_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/libs)
         set(BOOST_INCLUDEDIR   ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/boost)
         set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/boost)
     endif()

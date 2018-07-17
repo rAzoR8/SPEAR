@@ -1,12 +1,12 @@
 [submodule "libs/hlx"]
 	path = libs/hlx
 	url = https://github.com/rAzoR8/hlx
-[submodule "libs/SPIRV-Headers"]
-	path = libs/SPIRV-Headers
-	url = https://github.com/KhronosGroup/SPIRV-Headers
-[submodule "libs/SPIRV-Tools"]
-	path = libs/SPIRV-Tools
-	url = https://github.com/KhronosGroup/SPIRV-Tools
 [submodule "libs/glm"]
 	path = libs/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "libs/spirv-tools"]
+	path = libs/spirv-tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools.git
+[submodule "libs/spirv-headers"]
+	path = libs/spirv-headers
+	url = https://github.com/KhronosGroup/SPIRV-Headers.git
