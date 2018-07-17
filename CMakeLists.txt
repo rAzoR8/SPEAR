@@ -58,7 +58,7 @@ set(SPEAR_VERSION "${SPEAR_VERSION_MAJOR}.${SPEAR_VERSION_MINOR}")
 
 option(SPEAR_BUILD_TESTBED "Builds the SPEAR project testbed." ON)
 option(SPEAR_BUILD_SHADER_FACTORY "Builds the dynamic shader loader." ON)
-option(SPEAR_ENABLE_PROPERTIES "Enable optional property generation." OFF)
+option(SPEAR_ENABLE_PROPERTIES "Enable optional property generation." ON)
 if(SPEAR_ENABLE_PROPERTIES) # Conditionally removes _declspec(properties)!
     add_definitions(-DSPEAR_ENABLE_PROPERTIES)
 endif()
