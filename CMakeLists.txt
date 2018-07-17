@@ -88,6 +88,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL)
 
+set(SPIRV_WERROR OFF)
 set(spirv-tools_LIBRARY SPIRV-Tools SPIRV-Tools-opt) # Some assumption are being made OK?
 
 # Hide away any options that were imported together by using add_subdirectory above.
@@ -164,7 +165,7 @@ if(SPEAR_BUILD_SHADER_FACTORY)
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/libs/glm
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
                                                              ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-    target_link_libraries(libSPEARShaderFactory libSPEARGen ${Boost_LIBRARIES} ${Vulkan_LIBRARY})
+    target_link_libraries(libSPEARShaderFactory libSPEARGen ${Vulkan_LIBRARY})
     set_target_properties(libSPEARShaderFactory PROPERTIES FRAMEWORK ON VERSION ${PROJECT_VERSION})
     set_target_properties(libSPEARShaderFactory PROPERTIES SOVERSION ${PROJECT_VERSION})
 
