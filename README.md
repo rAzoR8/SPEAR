@@ -72,7 +72,7 @@ There is a `CMakeLists.txt` file in the root of this directory, which should wor
 5. After generating for your target, open the project and build the different modules.
 6. You should now be able to run `SPIRVGenTest`, and link with the libraries too.
 
-## CMake Options
+### Build options
 
 * **SPEAR_ENABLE_PROPERTIES    = ON | OFF (default: OFF):** Many convenience facilities are based on __declspec(property), and are not available on e.g. gcc. However, the library can be used without them fine.
 * **SPEAR_BUILD_TESTBED        = ON | OFF (default:  ON):** Also build the accompanying example project, depending on the libSPEARGen.  This gets you an executable e.g SPEARGenTest that you can (hopefully) run.
