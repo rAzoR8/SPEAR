@@ -85,10 +85,10 @@ endif()
 
 set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 
+option(SPIRV_WERROR "Disable error on warning" OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL)
 
-set(SPIRV_WERROR OFF)
 set(spirv-tools_LIBRARY SPIRV-Tools SPIRV-Tools-opt) # Some assumption are being made OK?
 
 # Hide away any options that were imported together by using add_subdirectory above.
