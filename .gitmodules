@@ -1,9 +1,16 @@
 [submodule "hlx"]
-	path = hlx
+    shallow=true
+	path = libs/hlx
 	url = https://github.com/rAzoR8/hlx.git
 [submodule "spirv-tools"]
-	path = spirv-tools
+    shallow=true
+	path = libs/spirv-tools
 	url = https://github.com/KhronosGroup/SPIRV-Tools.git
 [submodule "spirv-headers"]
-	path = spirv-headers
+    shallow=true
+	path = libs/spirv-headers
 	url = https://github.com/KhronosGroup/SPIRV-Headers
+[submodule "libs/glm"]
+    shallow=true
+	path = libs/glm
+	url = https://github.com/g-truc/glm

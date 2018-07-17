@@ -59,22 +59,22 @@ set(SPEAR_VERSION "${SPEAR_VERSION_MAJOR}.${SPEAR_VERSION_MINOR}")
 option(SPEAR_BUILD_TESTBED "Builds the SPEAR project testbed." ON)
 option(SPEAR_BUILD_SHADER_FACTORY "Builds the dynamic shader loader." ON)
 option(SPEAR_ENABLE_PROPERTIES "Enable optional property generation." OFF)
-if (SPEAR_ENABLE_PROPERTIES) # Conditionally removes _declspec(properties)
+if(SPEAR_ENABLE_PROPERTIES) # Conditionally removes _declspec(properties)!
     add_definitions(-DSPEAR_ENABLE_PROPERTIES)
 endif()
 
 find_package(Vulkan REQUIRED) # Maybe constrain this to 1.0 since we have 1.1.
 
-if (NOT Vulkan_FOUND)
+if(NOT Vulkan_FOUND)
     if (WIN32)
         # Shamelessly snatched from Vulkan/CMakeLists, tries to find Vulkan's library elsewhere.
         find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/libs/vulkan)
-        if (Vulkan_LIBRARY)
+        if(Vulkan_LIBRARY)
             set(Vulkan_FOUND ON)
             MESSAGE("Using local Vulkan library.")
         endif()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
-    else (WIN32)
+    else()
         find_library(Vulkan_LIBRARY NAMES vulkan HINTS "$ENV{VULKAN_SDK}/lib" "${CMAKE_SOURCE_DIR}/libs/vulkan" REQUIRED)
         if (Vulkan_LIBRARY)
             set(Vulkan_FOUND ON)
@@ -83,8 +83,16 @@ if (NOT Vulkan_FOUND)
     endif()
 endif()
 
-add_subdirectory(spirv-headers) # These are also bundled with some Vulkan SDKs.
-add_subdirectory(spirv-tools) # For linking the spirv-tools library with SPEAR.
+set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools   EXCLUDE_FROM_ALL)
+
+# Hide away any options that were imported together by using add_subdirectory above.
+mark_as_advanced(FORCE SKIP_SPIRV_TOOLS_INSTALL RE2_BUILD_TESTING SPIRV_BUILD_COMPRESSION
+                       SPIRV_CHECK_CONTEXT SPIRV_COLOR_TERMINAL SPIRV_LOG_DEBUG
+                       SPIRV_SKIP_EXECUTABLES SPIRV_SKIP_TESTS
+                       SPIRV_TOOLS_INSTALL_EMACS_HELPERS SPIRV_WERROR)
 
 add_library(libSPEARGen SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.cpp
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVConstant.cpp
@@ -95,7 +103,7 @@ add_library(libSPEARGen SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembl
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVType.cpp
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVVariable.cpp)
 target_include_directories(libSPEARGen PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
-                                       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/hlx/include
+                                       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/hlx/include
                                                ${Vulkan_INCLUDE_DIRS}
                                                ${SPIRV-Headers_SOURCE_DIR}/include
                                                ${spirv-tools_SOURCE_DIR}/include)
@@ -127,15 +135,28 @@ set(SPEAR_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.h
 
 # Below we define the headers that will be exported to the platform dep. path.
 set_target_properties(libSPEARGen PROPERTIES PUBLIC_HEADER "${SPEAR_INCLUDES}")
-# When installing, copy over the shared library and the header files.
-install(TARGETS libSPEARGen LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-if (SPEAR_BUILD_SHADER_FACTORY)
-    find_package(Boost 1.64 REQUIRED) # Maybe a bit too recent version, we can probably decrease this if problematic.
+if(WIN32)
+    install(TARGETS libSPEARGen RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+else()
+    install(TARGETS libSPEARGen LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+
+if(SPEAR_BUILD_SHADER_FACTORY)
+    find_package(Boost 1.64) # Maybe bit too recent version, we can probably decrease this if we find it problematic.
+
+    if(NOT Boost_FOUND) # Assume directory is in libs/boost.
+        message("Using custom Boost library at libs/boost!")
+        set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
+        set(BOOST_INCLUDEDIR   ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/boost)
+        set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/boost)
+    endif()
+
     add_library(libSPEARShaderFactory SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
     target_include_directories(libSPEARShaderFactory PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory
-                                                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/hlx/include
+                                                     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/hlx/include
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen
                                                              ${Vulkan_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
     target_link_libraries(libSPEARShaderFactory libSPEARGen ${Boost_LIBRARIES} ${Vulkan_LIBRARY})
@@ -162,12 +183,18 @@ if (SPEAR_BUILD_SHADER_FACTORY)
                                       ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/SimpleCSGRayMarching.h)
 
     set_target_properties(libSPEARShaderFactory PROPERTIES PUBLIC_HEADER "${SPEAR_SHADER_FACTORY_INCLUDES}")
-    # IDK if the ShaderFactory is something that should be installed in the $PATH, but let's do that now.
-    install(TARGETS libSPEARShaderFactory LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                                          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+    if(WIN32)
+        install(TARGETS libSPEARShaderFactory RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    else()
+        install(TARGETS libSPEARShaderFactory LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    endif()
+
 endif()
 
-if (SPEAR_BUILD_TESTBED)
+if(SPEAR_BUILD_TESTBED)
     add_executable(SPEARGenTest ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGenTest/main.cpp)
     target_include_directories(SPEARGenTest PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGenTest
                                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/hlx/include
@@ -176,4 +203,6 @@ if (SPEAR_BUILD_TESTBED)
     target_link_libraries(SPEARGenTest libSPEARGen ${Vulkan_LIBRARY})
     # Install the testbed as well. This is just for CMakeLists completeness.
     install(TARGETS SPEARGenTest RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SPEARGenTest)
 endif()
