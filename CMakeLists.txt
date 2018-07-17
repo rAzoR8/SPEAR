@@ -86,7 +86,8 @@ endif()
 set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 
 option(SPIRV_WERROR "Disable error on warning" OFF)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools EXCLUDE_FROM_ALL)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-tools   EXCLUDE_FROM_ALL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL)
 
 set(spirv-tools_LIBRARY SPIRV-Tools SPIRV-Tools-opt) # Some assumption are being made OK?
@@ -95,7 +96,7 @@ set(spirv-tools_LIBRARY SPIRV-Tools SPIRV-Tools-opt) # Some assumption are being
 mark_as_advanced(FORCE SKIP_SPIRV_TOOLS_INSTALL RE2_BUILD_TESTING SPIRV_BUILD_COMPRESSION
                        SPIRV_CHECK_CONTEXT SPIRV_COLOR_TERMINAL SPIRV_LOG_DEBUG
                        SPIRV_SKIP_EXECUTABLES SPIRV_SKIP_TESTS
-                       SPIRV_TOOLS_INSTALL_EMACS_HELPERS SPIRV_WERROR)
+                       SPIRV_TOOLS_INSTALL_EMACS_HELPERS)
 
 add_library(libSPEARGen SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.cpp
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVConstant.cpp
