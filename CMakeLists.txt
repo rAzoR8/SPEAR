@@ -98,7 +98,7 @@ mark_as_advanced(FORCE SKIP_SPIRV_TOOLS_INSTALL RE2_BUILD_TESTING SPIRV_BUILD_CO
                        SPIRV_SKIP_EXECUTABLES SPIRV_SKIP_TESTS
                        SPIRV_TOOLS_INSTALL_EMACS_HELPERS)
 
-add_library(libSPEARGen SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.cpp
+add_library(libSPEARGen STATIC ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.cpp
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVConstant.cpp
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVDecoration.cpp
                                ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVInstruction.cpp
@@ -141,26 +141,20 @@ set(SPEAR_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVGen/SPIRVAssembler.h
 # Below we define the headers that will be exported to the platform dep. path.
 set_target_properties(libSPEARGen PROPERTIES PUBLIC_HEADER "${SPEAR_INCLUDES}")
 
-if(WIN32)
-    install(TARGETS libSPEARGen RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-else()
-    install(TARGETS libSPEARGen LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-endif()
+install(TARGETS libSPEARGen ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if(SPEAR_BUILD_SHADER_FACTORY)
     find_package(Boost 1.64) # Maybe bit too recent version, we can probably decrease this if we find it problematic.
 
     if(NOT Boost_FOUND) # Assume directory is in libs/boost.
-        message("Using custom Boost library at libs/boost!")
+        message("Using custom Boost libraries at libs/boost!")
         set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
-        set(Boost_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/libs)
-        set(BOOST_INCLUDEDIR   ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/boost)
-        set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost/boost)
+        set(BOOST_INCLUDEDIR   ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
+        set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
     endif()
 
-    add_library(libSPEARShaderFactory SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
+    add_library(libSPEARShaderFactory STATIC ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
     target_include_directories(libSPEARShaderFactory PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory
                                                      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/hlx/include
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/libs/glm
@@ -191,13 +185,8 @@ if(SPEAR_BUILD_SHADER_FACTORY)
 
     set_target_properties(libSPEARShaderFactory PROPERTIES PUBLIC_HEADER "${SPEAR_SHADER_FACTORY_INCLUDES}")
 
-    if(WIN32)
-        install(TARGETS libSPEARShaderFactory RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-    else()
-        install(TARGETS libSPEARShaderFactory LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-    endif()
+    install(TARGETS libSPEARShaderFactory ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 endif()
 
