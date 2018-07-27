@@ -86,9 +86,9 @@ Below is a complete summary of the steps you need to build SPEAR for Visual Stud
 * `SPIRVGen`: Core Spear library
 * `SPIRVGenTest`: Simple testbed project
 * `SPIRVShaderFactory`: Dynamic shader library example project
-* `spirv-tools`: Target output folder for spirv-tool cmake
-* `spirv-headers`: SPIRV headers to be used when building
-* `boost`: Used for including the boost.DLL library
+* `libs`: Target folder with all submodule dependencies.
+* `libs/boost`: Location where boost headers should go.
+* `build`: Location of the  generated solution.
 
 `SPIRVGen` library project requires Vulkan-SDK files and HLX (submodule) headers.
 `SPIRVGenTest` executable project should link `SPIRVGen`.
