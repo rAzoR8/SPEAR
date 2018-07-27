@@ -5,7 +5,7 @@
 # Call `cmake ..` and provide any extra configuration settings you might need to
 # make it work. All configs that can be given are shown below and in the README:
 #
-# SPEAR_ENABLE_PROPERTIES    = ON | OFF (default: OFF)
+# SPEAR_ENABLE_PROPERTIES    = ON | OFF  (default: ON)
 #     Many convenience facilities are based on __declspec(property), and are not
 #     available on e.g. gcc. However, the library can be used without them fine.
 #
@@ -92,7 +92,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/spirv-headers EXCLUDE_FROM_ALL
 
 set(spirv-tools_LIBRARY SPIRV-Tools SPIRV-Tools-opt) # Some assumption are being made OK?
 
-# Hide away any options that were imported together by using add_subdirectory above.
+# Hide away any options that were imported together with the add_subdirectory call above.
 mark_as_advanced(FORCE SKIP_SPIRV_TOOLS_INSTALL RE2_BUILD_TESTING SPIRV_BUILD_COMPRESSION
                        SPIRV_CHECK_CONTEXT SPIRV_COLOR_TERMINAL SPIRV_LOG_DEBUG
                        SPIRV_SKIP_EXECUTABLES SPIRV_SKIP_TESTS
