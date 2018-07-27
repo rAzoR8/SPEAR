@@ -63,20 +63,23 @@ Please read to accompanying paper [Development of a C++/SPIR-V Shader-Runtime](m
 
 ## Build
 
-There is a `CMakeLists.txt` file in the root of this directory, which should work for generating Visual Studio solutions. The requirements are a `C++17` compliant compiler, and that you have a Vulkan SDK setup somewhere in your system, these dependencies are resolved automatically. You will also need `boost` somewhere in your path, but you can download it from [here](https://dl.bintray.com/boostorg/release/1.67.0/source/) and add it under the `libs/boost` directory in the project root to prevent cluttering your system. The rest of the dependencies: `glm`, `spirv-headers` and `spriv-tools` are fetched automatically by git submodules, and should work out-of-the-box. **Note:** this is a *very* experimental CMake-file! You might need to hack a bit to make it work for your platform! Here is a step-by-step guide on how to build SPEAR:
+The SPEAR project currently uses CMake to generate build files. In the root of this project is a `CMakeLists.txt`, which should work for generating Visual Studio solutions. There are some issues when generating Makefiles for GNU Make, but it should in theory work with a bit of fiddling. The requirements are: a `C++17` compliant compiler, a Vulkan SDK and runtime somewhere in your system, which are resolved automatically by CMake. You'll also need `boost` somewhere in your include path, or, alternatively, under `libs/boost` (just the headers, which you can get [here](https://dl.bintray.com/boostorg/release/1.67.0/source/)). The rest of the dependencies `glm`, `spirv-headers` and `spirv-tools` are fetched automatically by git submodules, and should in theory work out-of-the-box.
 
-1. Clone this repository down to disk: `git clone https://github.com/rAzoR8/SPEAR`.
-2. Download `boost` (if you don't already have it`) and put it under `libs/boost` in `SPEAR`.
-3. Fetch the rest of the dependencies with: `git submodule init && git submodule update --depth 1`.
-4. Run `cmake-gui`, and select the SPEAR root directory. Modify the options as you see fit.
-5. After generating for your target, open the project and build the different modules.
-6. You should now be able to run `SPIRVGenTest`, and link with the libraries too.
+**Note:** this is a *very* experimental CMake-file! You might need to hack a bit to make it work on your platform, but it should at least work on a target with Visual Studio & LunarG SDK. Also, it isn't nice enough to provide `find_package` in CMake yet, you'll have to do that sort of stuff manually for now. If you have any improvements, feel free to issue a pull request!
+
+Below is a complete summary of the steps you need to build SPEAR for Visual Studio 2017:
+
+1. Clone this repository down to disk: `git clone https://github.com/rAzoR8/SPEAR`
+2. Download `boost` (if it's not in your global include path), and put the headers under `libs/boost`
+3. Fetch the rest of the dependencies with: `git submodule init && git submodule update`
+4. Generate the Visual Studio solution with `cmake-gui`, modify the *build options* as you see fit.
+5. Open the solution in Visual Studio, and set `SPIRVGenTest` as the target project. Build and run.
 
 ### Build options
 
-* **SPEAR_ENABLE_PROPERTIES    = ON | OFF (default: OFF):** Many convenience facilities are based on __declspec(property), and are not available on e.g. gcc. However, the library can be used without them fine.
-* **SPEAR_BUILD_TESTBED        = ON | OFF (default:  ON):** Also build the accompanying example project, depending on the libSPEARGen.  This gets you an executable e.g SPEARGenTest that you can (hopefully) run.
-* **SPEAR_BUILD_SHADER_FACTORY = ON | OFF (default:  ON):** Also build the dynamic shader library project and links it to libSPEARGen, which will be a shared library called libSPEARShaderFactory.so on Unix-es.
+* **SPEAR_ENABLE_PROPERTIES    = ON | OFF (default: ON):** Many convenience facilities are based on __declspec(property), and are not available on e.g. gcc. However, the library can be used without them fine.
+* **SPEAR_BUILD_TESTBED        = ON | OFF (default: ON):** Also build the accompanying example project, depending on the libSPEARGen.  This gets you an executable e.g SPEARGenTest that you can (hopefully) run.
+* **SPEAR_BUILD_SHADER_FACTORY = ON | OFF (default: ON):** Also build the dynamic shader library project and links it to libSPEARGen, which will be a shared library called libSPEARShaderFactory.so on Unix-es.
 
 ### Source code organization
 
