@@ -7,7 +7,11 @@
 #ifndef SPEAR_SPIRVOPERATION_H
 #define SPEAR_SPIRVOPERATION_H
 
-#include <vulkan\spirv.hpp>
+#include <vector>
+#include <cstdint>
+#include <string>
+
+#include <spirv/1.2/spirv.hpp>
 #include "StandardDefines.h"
 
 namespace Spear

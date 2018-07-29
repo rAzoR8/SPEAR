@@ -9,7 +9,7 @@
 
 #include <string>
 #include <unordered_map>
-#include <vulkan\spirv.hpp>	
+#include <spirv/1.2/spirv.hpp>
 #include "Flag.h"
 
 namespace Spear

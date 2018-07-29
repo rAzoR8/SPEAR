@@ -63,15 +63,32 @@ Please read to accompanying paper [Development of a C++/SPIR-V Shader-Runtime](m
 
 ## Build
 
-No build files provided at the moment, please consider contributing. A C++17 compliant compiler is required! 
+The SPEAR project currently uses CMake to generate build files. In the root of this project is a `CMakeLists.txt`, which should work for generating Visual Studio solutions. There are some issues when generating Makefiles for GNU Make, but it should in theory work with a bit of fiddling. The requirements are: a `C++17` compliant compiler, a Vulkan SDK and runtime somewhere in your system, which are resolved automatically by CMake. You'll also need `boost` somewhere in your include path, or, alternatively, under `libs/boost` (just the headers, which you can get [here](https://dl.bintray.com/boostorg/release/1.67.0/source/)). The rest of the dependencies `glm`, `spirv-headers` and `spirv-tools` are fetched automatically by git submodules, and should in theory work out-of-the-box.
+
+**Note:** this is a *very* experimental CMake-file! You might need to hack a bit to make it work on your platform, but it should at least work on a target with Visual Studio & LunarG SDK. Also, it isn't nice enough to provide `find_package` in CMake yet, you'll have to do that sort of stuff manually for now. If you have any improvements, feel free to issue a pull request!
+
+Below is a complete summary of the steps you need to build SPEAR for Visual Studio 2017:
+
+1. Clone this repository down to disk: `git clone https://github.com/rAzoR8/SPEAR`
+2. Download `boost` (if it's not in your global include path), and put the headers under `libs/boost`
+3. Fetch the rest of the dependencies with: `git submodule init && git submodule update`
+4. Generate the Visual Studio solution with `cmake-gui`, modify the *build options* as you see fit.
+5. Open the solution in Visual Studio, and set `SPIRVGenTest` as the target project. Build and run.
+
+### Build options
+
+* **SPEAR_ENABLE_PROPERTIES    = ON | OFF (default: ON):** Many convenience facilities are based on __declspec(property), and are not available on e.g. gcc. However, the library can be used without them fine.
+* **SPEAR_BUILD_TESTBED        = ON | OFF (default: ON):** Also build the accompanying example project, depending on the libSPEARGen.  This gets you an executable e.g SPEARGenTest that you can (hopefully) run.
+* **SPEAR_BUILD_SHADER_FACTORY = ON | OFF (default: ON):** Also build the dynamic shader library project and links it to libSPEARGen, which will be a shared library called libSPEARShaderFactory.so on Unix-es.
 
 ### Source code organization
 
 * `SPIRVGen`: Core Spear library
 * `SPIRVGenTest`: Simple testbed project
 * `SPIRVShaderFactory`: Dynamic shader library example project
-* `spirvtools`: Target output folder for spirv-tool cmake
-* `boost`: for boost.DLL
+* `libs`: Target folder with all submodule dependencies.
+* `libs/boost`: Location where boost headers should go.
+* `build`: Location of the  generated solution.
 
 `SPIRVGen` library project requires Vulkan-SDK files and HLX (submodule) headers.
 `SPIRVGenTest` executable project should link `SPIRVGen`.

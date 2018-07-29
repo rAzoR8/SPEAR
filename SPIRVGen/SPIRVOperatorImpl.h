@@ -8,8 +8,8 @@
 #define SPEAR_SPIRVOPERATORIMPL_H
 
 #include "SPIRVVariable.h"
-#include <vulkan\GLSL.std.450.h>
-#include <glm\gtc\constants.hpp>
+#include <spirv/1.2/GLSL.std.450.h>
+#include <glm/gtc/constants.hpp>
 
 namespace Spear
 {
