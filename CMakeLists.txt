@@ -156,7 +156,7 @@ if(SPEAR_BUILD_SHADER_FACTORY)
 		set(Boost_FOUND ON)
     endif()
 
-    add_library(libSPEARShaderFactory STATIC ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
+    add_library(libSPEARShaderFactory SHARED ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
     target_include_directories(libSPEARShaderFactory PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory
                                                      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/hlx/include
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/libs/glm
