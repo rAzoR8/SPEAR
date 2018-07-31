@@ -116,4 +116,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 The SPEAR project is maintained by Fabian Wahlster and hosted at https://github.com/razor8/SPEAR.
 
 Special thanks go to:
-* Mathias Kanzler
+* Mathias Kanzler who supervised this research
+* Erik S. V. Jansson [CaffeineViking](https://github.com/CaffeineViking) who provided CMake support

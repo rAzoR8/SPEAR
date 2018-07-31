@@ -56,6 +56,9 @@ set(SPEAR_VERSION_MAJOR "1")
 set(SPEAR_VERSION_MINOR "0")
 set(SPEAR_VERSION "${SPEAR_VERSION_MAJOR}.${SPEAR_VERSION_MINOR}")
 
+#set(ENV{SPEAR_SDK} ${CMAKE_CURRENT_SOURCE_DIR})
+#message("Setting environment variable SPEAR_SDK: $ENV{SPEAR_SDK}")
+
 option(SPEAR_BUILD_TESTBED "Builds the SPEAR project testbed." ON)
 option(SPEAR_BUILD_SHADER_FACTORY "Builds the dynamic shader loader." ON)
 option(SPEAR_ENABLE_PROPERTIES "Enable optional property generation." ON)
@@ -149,9 +152,8 @@ if(SPEAR_BUILD_SHADER_FACTORY)
 
     if(NOT Boost_FOUND) # Assume directory is in libs/boost.
         message("Using custom Boost libraries at libs/boost!")
-        set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
-        set(BOOST_INCLUDEDIR   ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
-        set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
+		set(Boost_INCLUDE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost CACHE PATH "boost location")
+		set(Boost_FOUND ON)
     endif()
 
     add_library(libSPEARShaderFactory STATIC ${CMAKE_CURRENT_SOURCE_DIR}/SPIRVShaderFactory/DefaultShaderFactory.cpp)
