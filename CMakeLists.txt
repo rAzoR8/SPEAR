@@ -152,7 +152,7 @@ if(SPEAR_BUILD_SHADER_FACTORY)
 
     if(NOT Boost_FOUND) # Assume directory is in libs/boost.
         message("Using custom Boost libraries at libs/boost!")
-		set(Boost_INCLUDE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost CACHE PATH "boost location")
+        set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost CACHE PATH "Location of the Boost libraries.")
 		set(Boost_FOUND ON)
     endif()
 
